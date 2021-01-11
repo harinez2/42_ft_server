@@ -23,10 +23,12 @@ RUN apt-get install -y nginx php-fpm && apt-get clean
 RUN cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.original
 COPY srcs/nginx.conf /etc/nginx/
 COPY srcs/default /etc/nginx/sites-available
-RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+RUN rm /etc/nginx/sites-enabled/default \
+	&& ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+RUN mkdir /etc/nginx/cert
+COPY srcs/cert/* /etc/nginx/cert/
 COPY srcs/index2.html /var/www/html
 RUN mkdir /var/www/html/noindexdir && echo a > /var/www/html/noindexdir/a.txt
-#RUN echo "Hello World" > /usr/share/nginx/html/index.html
 #EXPOSE 80
 
 # MySQL
@@ -58,10 +60,10 @@ RUN tar zxf phpMyAdmin-5.0.4-all-languages.tar.gz \
 	&& rm phpMyAdmin-5.0.4-all-languages.tar.gz
 RUN mkdir -p /var/lib/phpmyadmin/tmp
 RUN chown -R www-data:www-data /var/lib/phpmyadmin
-RUN chmod -R 744 /var/lib/phpmyadmin/*.php
 #RUN sed -e "s/\$cfg\['blowfish_secret'\] = '';/\$cfg\['blowfish_secret'\] = 'mamgpuemrimodiemwialgnmfanguieng';/" \
 #	/usr/share/phpmyadmin/config.sample.inc.php > /usr/share/phpmyadmin/config.inc.php 
 COPY srcs/phpmyadmin.config.inc.php /usr/share/phpmyadmin/config.inc.php
+RUN chmod -R 744 /usr/share/phpmyadmin/*.php
 
 # WordPress
 RUN echo "########## WordPress: Starting installation... ##########"
