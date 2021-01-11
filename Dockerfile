@@ -20,8 +20,10 @@ RUN \
 # nginx
 RUN echo "########## nginx: Starting installation... ##########"
 RUN apt-get install -y nginx php-fpm && apt-get clean
+RUN cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.original
 COPY srcs/nginx.conf /etc/nginx/
-COPY srcs/default /etc/nginx/sites-enabled
+COPY srcs/default /etc/nginx/sites-available
+RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 COPY srcs/index2.html /var/www/html
 RUN mkdir /var/www/html/noindexdir && echo a > /var/www/html/noindexdir/a.txt
 #RUN echo "Hello World" > /usr/share/nginx/html/index.html
@@ -29,7 +31,7 @@ RUN mkdir /var/www/html/noindexdir && echo a > /var/www/html/noindexdir/a.txt
 
 # MySQL
 RUN echo "########## MySQL: Starting installation... ##########"
-RUN apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 	lsb-release \
 	gnupg \
 	&& apt-get clean
@@ -37,17 +39,18 @@ ADD https://repo.mysql.com/mysql-apt-config_0.8.16-1_all.deb /
 #RUN export DEBIAN_FRONTEND=noninteractive; dpkg -i /mysql-apt-config_0.8.16-1_all.deb
 RUN dpkg -i /mysql-apt-config_0.8.16-1_all.deb \
 	&& rm mysql-apt-config_0.8.16-1_all.deb
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 	libaio1 \
 	mysql-server \
 	&& apt-get clean
 
 # phpMyAdmin
 RUN echo "########## phpMyAdmin: Starting installation... ##########"
-RUN apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 	php-mbstring \
 	php-zip \
 	php-gd \
+	php-mysql \
 	&& apt-get clean
 ADD https://files.phpmyadmin.net/phpMyAdmin/5.0.4/phpMyAdmin-5.0.4-all-languages.tar.gz /
 RUN tar zxf phpMyAdmin-5.0.4-all-languages.tar.gz \
@@ -55,6 +58,7 @@ RUN tar zxf phpMyAdmin-5.0.4-all-languages.tar.gz \
 	&& rm phpMyAdmin-5.0.4-all-languages.tar.gz
 RUN mkdir -p /var/lib/phpmyadmin/tmp
 RUN chown -R www-data:www-data /var/lib/phpmyadmin
+RUN chmod -R 744 /var/lib/phpmyadmin/*.php
 #RUN sed -e "s/\$cfg\['blowfish_secret'\] = '';/\$cfg\['blowfish_secret'\] = 'mamgpuemrimodiemwialgnmfanguieng';/" \
 #	/usr/share/phpmyadmin/config.sample.inc.php > /usr/share/phpmyadmin/config.inc.php 
 COPY srcs/phpmyadmin.config.inc.php /usr/share/phpmyadmin/config.inc.php
@@ -65,6 +69,7 @@ COPY srcs/wordpress-5.6-ja.tar.gz /
 RUN tar zxf wordpress-5.6-ja.tar.gz \
 	&& mv wordpress/ /var/www/html/wp \
 	&& rm wordpress-5.6-ja.tar.gz
+RUN chmod -R 744 /var/www/html/wp/*.php
 
 # startup script
 RUN echo "########## startup script: Starting installation... ##########"

@@ -44,24 +44,30 @@ server {
 	index index.html index.htm index.php index.nginx-debian.html;
 
 	server_name _;
+	root /var/www/html;
+
+	autoindex		on;
+	autoindex_exact_size	off;
+	autoindex_localtime	on;
 
 	location / {
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404.
 		try_files $uri $uri/ =404;
 		
-		root /var/www/html;
 	}
-	autoindex on;
-	autoindex_exact_size off;
-	autoindex_localtime on;
 	
 	location /phpmyadmin/ {
-		root /usr/share/phpmyadmin;
+		root /usr/share;
 	}
 
 	# pass PHP scripts to FastCGI server
 	#
+	location ~* ^/phpmyadmin/.*\.php$ {
+		root /usr/share;
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+	}
 	location ~ \.php$ {
 		include snippets/fastcgi-php.conf;
 	
