@@ -9,7 +9,7 @@ LABEL maintainer="yonishi@student.42tokyo.jp"
 # for docker build
 #RUN add-apt-repository ppa:nijel/phpmyadmin && \
 RUN echo "########## General: Starting installation... ##########"
-ENV DEBIAN_FRONTEND noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
 RUN \
 	apt-get update && apt-get upgrade -y && apt-get install -y \
 	man \
