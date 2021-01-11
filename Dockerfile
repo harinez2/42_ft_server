@@ -10,6 +10,7 @@ LABEL maintainer="yonishi@student.42tokyo.jp"
 #RUN add-apt-repository ppa:nijel/phpmyadmin && \
 RUN echo "########## General: Starting installation... ##########"
 ARG DEBIAN_FRONTEND=noninteractive
+ARG DEBCONF_NOWARNINGS=yes
 RUN \
 	apt-get update && apt-get upgrade -y && apt-get install -y \
 	man \
