@@ -23,7 +23,7 @@ RUN echo "########## nginx: Starting installation... ##########"
 RUN apt-get install -y nginx php-fpm && apt-get clean
 RUN cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.original
 COPY srcs/nginx.conf /etc/nginx/
-COPY srcs/default /etc/nginx/sites-available
+COPY srcs/nginx.default /etc/nginx/sites-available/default
 RUN rm /etc/nginx/sites-enabled/default \
 	&& ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 RUN mkdir /etc/nginx/cert
@@ -64,6 +64,7 @@ RUN chown -R www-data:www-data /var/lib/phpmyadmin
 #RUN sed -e "s/\$cfg\['blowfish_secret'\] = '';/\$cfg\['blowfish_secret'\] = 'mamgpuemrimodiemwialgnmfanguieng';/" \
 #	/usr/share/phpmyadmin/config.sample.inc.php > /usr/share/phpmyadmin/config.inc.php 
 COPY srcs/phpmyadmin.config.inc.php /usr/share/phpmyadmin/config.inc.php
+COPY srcs/phpmyadmin.create_users.sql /usr/share/phpmyadmin/sql/create_users.sql
 RUN chmod -R 744 /usr/share/phpmyadmin/*.php
 
 # WordPress
