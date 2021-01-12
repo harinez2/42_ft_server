@@ -73,7 +73,7 @@ COPY srcs/wordpress-5.6-ja.tar.gz /
 RUN tar zxf wordpress-5.6-ja.tar.gz \
 	&& mv wordpress/ /var/www/html/wp \
 	&& rm wordpress-5.6-ja.tar.gz
-RUN chmod -R 744 /var/www/html/wp/*.php
+RUN chmod -R 777 /var/www/html/wp
 
 # startup script
 RUN echo "########## startup script: Starting installation... ##########"
