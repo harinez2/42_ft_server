@@ -28,7 +28,7 @@ do
     break;
   fi
   echo "$i : waiting for starting mysql service..."
-  sleep 1;
+  sleep 2;
 done
 
 #nginx
