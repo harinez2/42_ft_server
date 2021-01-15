@@ -7,12 +7,10 @@ LABEL maintainer="yonishi@student.42tokyo.jp"
 
 ############################################################
 # for docker build
-#RUN add-apt-repository ppa:nijel/phpmyadmin && \
 RUN echo "########## General: Starting installation... ##########"
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NOWARNINGS=yes
-RUN \
-	apt-get update && apt-get upgrade -y && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 	man \
 	vim \
 	wget \
@@ -36,8 +34,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 	lsb-release \
 	gnupg \
 	&& apt-get clean
-ADD https://repo.mysql.com/mysql-apt-config_0.8.16-1_all.deb /
-RUN dpkg -i /mysql-apt-config_0.8.16-1_all.deb \
+RUN wget -q https://repo.mysql.com/mysql-apt-config_0.8.16-1_all.deb \
+	&& dpkg -i /mysql-apt-config_0.8.16-1_all.deb \
 	&& rm mysql-apt-config_0.8.16-1_all.deb
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
 	libaio1 \
