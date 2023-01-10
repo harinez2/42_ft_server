@@ -23,8 +23,8 @@ docker run -p 8080:80 -p 4443:443 -e AUTOINDEX=on -it ttt
 
 - HTTP（80番ポート）、HTTPS（443番ポート）にてウェブサーバがnginxで起動します
 - コンテナ実行時にAUTOINDEXの値を指定することで、index.xxxのファイルがないときにファイル一覧を表示するかどうかの設定を指定できます
-- https://localhost:443/wp/にてWordPressが起動します
-- https://localhost:443/phpmyadmin/にてphpMyAdminが起動します
+- https://localhost:443/wp/ にてWordPressが起動します
+- https://localhost:443/phpmyadmin/ にてphpMyAdminが起動します
 
 
 
